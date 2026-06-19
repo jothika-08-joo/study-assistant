@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_mysqldb import MySQL
 
 app=Flask(__name__)
@@ -10,4 +10,8 @@ db=MySQL(app)
 @app.route('/')
 def home():
     return "flask is running"    
+
+@app.route('/signup')
+def signup():
+    return render_template("signup.html")    
 app.run(debug=True)    
