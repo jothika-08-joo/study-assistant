@@ -1,5 +1,10 @@
 <form action="{{url_for('signup')}}" method="POST">
-    <input type="text" name="name">enter your name<br>
-    <input type="password" name="password">enter your password<br>
+    Enter name:<input type="text" name="name" placeholder="enter your name"><br>
+    Enter password:<input type="password" name="password" placeholder="enter password"><br>
     <button>submit<br>
 </form>
+{% with message=get_flashed_message()%}
+   {% for i in message%}
+      {{i}}
+    {%endfor%}   
+{%end with%}    
