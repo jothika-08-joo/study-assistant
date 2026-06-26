@@ -10,7 +10,7 @@ app.config['MYSQL_USER']='root'
 app.config['MYSQL_PASSWORD']='root'
 app.config['MYSQL_DB']='study_assistant'
 db=MySQL(app)
-bycrpt=Bcrypt(app)
+bcrypt=Bcrypt(app)
 @app.route('/')
 def home():
     return "flask is running"    
@@ -32,7 +32,7 @@ def signup():
                 return redirect(url_for('signup'))
             password_hash=bcrypt.generate_password_hash(password)     
             cursor=db.connection.cursor()
-            cursor.execute("insert into user (name, password, ) values(%s,%s, )",
+            cursor.execute("insert into user (name, password) values(%s,%s)",
             (username, password_hash))
             db.connection.commit()
             return render_template("login.html")
