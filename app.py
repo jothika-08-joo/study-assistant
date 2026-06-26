@@ -37,6 +37,35 @@ def signup():
             db.connection.commit()
             return render_template("login.html")
         return render_template("signup.html")    
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method=='POST':
+        username=request.form.get('name').strip()
+        password=request.form.get('password')
+
+        if not username or not password:
+            flash("kindly enter your name and password")
+            return redirect(url_for('login'))
+        cursor=db.connection.cursor()
+        cursor.execute("select id from user where name=%s", (username,))    
+        already_signedin=cursor.fetchone()
+        if already_signedin:
+            cursor=db.connection.cursor()
+            cursor.execute("select password from user where name=%s", (username,))
+            signed_person_password=cursor.fetchone()
+            s=signed_person_password(0)
+            if bcrypt.check_password_hash(s,password):
+                return render_template("dashboard.html")
+            else:
+                flash("enter your username or password correctly")  
+                return redirect(url_for('login'))
+        flash("first signin")
+        return redirect(url_for("signup"))
+    return render_template("login.html")    
+
+            
+
     
 
               

@@ -1,0 +1,10 @@
+<form action="{{(url_for('login'))}}" method="POST">
+  USERNAME:<input type="text" name="name" placeholder="enter your name"><br>
+  PASSWORD:<input type="password" name="password" placeholder="enter your password"><br>
+  <button>submit</button>
+</form>  
+{% with message=get_flashed_messages()%}
+      {%for i in message%}
+          {{i}}
+      {%endfor%}
+{%endwith%}
