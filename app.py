@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 
@@ -14,6 +14,9 @@ bcrypt=Bcrypt(app)
 @app.route('/')
 def home():
     return "flask is running"    
+ 
+def is_logged_in():
+    return user_id in session    
 
 @app.route('/signup',methods=['POST','GET'])
 def signup():
@@ -48,15 +51,14 @@ def login():
             flash("kindly enter your name and password")
             return redirect(url_for('login'))
         cursor=db.connection.cursor()
-        cursor.execute("select id from user where name=%s", (username,))    
+        cursor.execute("select id,password from user where name=%s", (username,))    
         already_signedin=cursor.fetchone()
         if already_signedin:
-            cursor=db.connection.cursor()
-            cursor.execute("select password from user where name=%s", (username,))
-            signed_person_password=cursor.fetchone()
-            s=signed_person_password(0)
+            s=already_signedin[1]
             if bcrypt.check_password_hash(s,password):
+                session['user_id']=already_signedin[0]
                 return render_template("dashboard.html")
+                
             else:
                 flash("enter your username or password correctly")  
                 return redirect(url_for('login'))
