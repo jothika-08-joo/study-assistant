@@ -38,8 +38,8 @@ def signup():
             cursor.execute("insert into user (name, password) values(%s,%s)",
             (username, password_hash))
             db.connection.commit()
-            return render_template("login.html")
-        return render_template("signup.html")    
+            return redirect(url_for('login'))
+        return render_template("signup.html")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -57,14 +57,14 @@ def login():
             s=already_signedin[1]
             if bcrypt.check_password_hash(s,password):
                 session['user_id']=already_signedin[0]
-                return render_template("dashboard.html")
+                return redirect(url_for('dashboard'))
                 
             else:
                 flash("enter your username or password correctly")  
                 return redirect(url_for('login'))
         flash("first signin")
         return redirect(url_for("signup"))
-    return render_template("login.html")    
+    return render_template("login.html")
 
             
 
